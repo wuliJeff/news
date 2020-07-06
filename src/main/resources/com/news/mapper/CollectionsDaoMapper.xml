@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.ICollectionsDao">
+
+    <!-- 对新闻添加收藏 -->
+    <insert id="addCollection" parameterType="int">
+        insert into collections values (#{userId}, #{newsId})
+        <selectKey keyColumn="userId" keyProperty="userId" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!-- 对新闻移除收藏 -->
+    <delete id="removeCollection" parameterType="int">
+        delete from collections where userId=#{userId} and newsId=#{newsId}
+    </delete>
+
+    <!-- 检查新闻是否移除成功 -->
+    <select id="isExistCollection" parameterType="int" resultType="com.news.entity.Collections">
+        select * from collections where userId=#{userId} and newsId=#{newsId}
+    </select>
+
+    <!-- 获取用户的收藏新闻列表 -->
+    <select id="getCollectionsById" parameterType="int" resultType="com.news.entity.Collections">
+        select * from collections where userId=#{userId}
+    </select>
+</mapper>

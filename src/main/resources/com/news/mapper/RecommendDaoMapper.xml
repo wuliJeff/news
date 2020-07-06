@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.IRecommendDao">
+
+    <!-- 记录用户对某类新闻的浏览量 -->
+    <insert id="addNewRecommend">
+        insert into recommend values (#{userId}, #{type}, 1)
+        <selectKey keyColumn="userId" keyProperty="userId" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!-- 查询是否存在记录 -->
+    <select id="isExistRecommend" resultType="com.news.entity.Recommend">
+        select * from recommend where userId=#{userId} and type=#{type}
+    </select>
+
+
+    <!-- 更新浏览量 -->
+    <update id="updateBrowseCount">
+        update recommend set browseCount=browseCount+1 where userId=#{userId} and type=#{type}
+    </update>
+
+    <!-- 查询用户最喜欢的类别的新闻类型 -->
+    <select id="getHotTypeById" parameterType="int" resultType="String">
+        select type from recommend where userId=#{userId}
+                    and browseCount=(select max(browseCount) from recommend);
+    </select>
+</mapper>

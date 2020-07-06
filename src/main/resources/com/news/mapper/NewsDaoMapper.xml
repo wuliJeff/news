@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.INewsDao">
+    <!-- 获取所有新闻 -->
+    <select id="getAllNews" resultType="com.news.entity.News">
+        select * from news order by time desc
+    </select>
+
+    <!-- 根据类型获取新闻 -->
+    <select id="getNewsByType" parameterType="String" resultType="com.news.entity.News">
+        select * from news where type=#{type} order by time desc
+    </select>
+
+    <!-- 更新新闻浏览量 -->
+    <update id="updateBrowseCount" parameterType="int">
+        update news set browseCount=browseCount+1 where newsId=#{newsId}
+    </update>
+</mapper>

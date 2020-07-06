@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.news.dao.IUserDao">
+
+    <!-- 查询用户 -->
+    <select id="isExistAccount" resultType="String">
+        select account from userInfo where account=#{account}
+    </select>
+
+    <!-- 查询检查密码是否正确 -->
+    <select id="checkPwd" resultType="com.news.entity.UserInfo">
+        select * from userInfo where account=#{account} and password=#{password}
+    </select>
+
+    <!-- 注册新用户 -->
+    <insert id="registerUser" parameterType="com.news.entity.UserInfo">
+        insert into userInfo values (null, #{userInfo.account}, #{userInfo.password}, #{userInfo.name}, #{userInfo.tel},
+        #{userInfo.email})
+        <selectKey keyColumn="userId" keyProperty="userId" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <!-- 验证手机号或邮箱 -->
+    <select id="checkTelOrEmail" parameterType="String" resultType="com.news.entity.UserInfo">
+        select * from userInfo where account=#{account} and (tel=#{telOrEmail} or email=#{telOrEmail})
+    </select>
+
+    <!-- 重置密码 -->
+    <update id="resetPwd" parameterType="String">
+        update userInfo set password=#{newPwd} where account=#{account}
+        <selectKey keyColumn="userId" keyProperty="userId" resultType="int" order="AFTER">
+            select @@IDENTITY as userId
+        </selectKey>
+    </update>
+</mapper>
